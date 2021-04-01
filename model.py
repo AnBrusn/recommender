@@ -17,9 +17,9 @@ class NCF(pl.LightningModule):
         super().__init__()
         self.user_embedding = nn.Embedding(num_users, dim)
         self.item_embedding = nn.Embedding(num_items, dim)
-        self.fc1 = nn.Linear(in_features=dim*2, out_features=dim*10)
-        self.fc2 = nn.Linear(in_features=dim*10, out_features=dim*5)
-        self.fc3 = nn.Linear(in_features=dim*5, out_features=dim)
+        self.fc1 = nn.Linear(in_features=dim*2, out_features=dim*5)
+        self.fc2 = nn.Linear(in_features=dim*5, out_features=dim*3)
+        self.fc3 = nn.Linear(in_features=dim*3, out_features=dim)
         self.output = nn.Linear(in_features=dim, out_features=1)
         self.train_data = train_data
         
