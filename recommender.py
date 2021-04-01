@@ -9,7 +9,7 @@ import pytorch_lightning as pl
 class Recommender():
     
     def __init__(self, train_data=None, validation_data=None, test_data=None, neg_num=1):
-        self.components_number = 100
+        self.components_number = 5
         if train_data is not None:
             self.num_users = train_data['user_id'].unique().size;
             self.num_items = np.unique(np.concatenate((train_data['product_id'].to_numpy(),
@@ -111,13 +111,15 @@ class Recommender():
     
     def predict(self, user_ids, item_ids):
         '''Get predictions for users and items.'''
-        pred_tensor = self.model(torch.tensor(user_ids), torch.tensor(item_ids))
-        return pred_tensor.detach().numpy().reshape(1, pred_tensor.shape[0])[0]
+        preds = []
+        for user in user_ids:
+            preds += [self.predict_for_user(user, item_ids)]
+        return preds
     
     
     def predict_for_user(self, user_id, item_ids):
         '''Get predictions for one user and all items from list.'''
         user_ids = [user_id] * len(item_ids)
         pred_tensor = self.model(torch.tensor(user_ids), torch.tensor(item_ids))
-        return pred_tensor.detach().numpy().reshape(1, pred_tensor.shape[0])[0]
+        return pred_tensor.detach().numpy().reshape(1, pred_tensor.shape[0])[0].tolist()
         
